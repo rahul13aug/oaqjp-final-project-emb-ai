@@ -12,7 +12,7 @@ def emotion_detector(text_to_analyze):
 
     response = requests.post(url, json = myobj, headers = header) #get response
     #if status code is 200, than extract value of emotions
-    if response.status_code ==200:
+    if response.status_code == 200:
 
         formatted_response = json.loads(response.text)#convert to json
 
@@ -30,7 +30,7 @@ def emotion_detector(text_to_analyze):
             if score == dominant_emotion_score:
                 dominant_emotion = emotion
         mydict["dominant emotion"] = dominant_emotion #update doctionary with dominant emotion 
-    elif response.status_code ==500:
+    elif response.status_code == 400:
         anger_score = None #make anger score to None
         disgust_score = None #make disgust score to None
         fear_score = None #make fear score to None
