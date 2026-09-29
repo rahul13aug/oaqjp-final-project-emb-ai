@@ -11,23 +11,39 @@ def emotion_detector(text_to_analyze):
     myobj = { "raw_document": { "text": text_to_analyze } }
 
     response = requests.post(url, json = myobj, headers = header) #get response
-    formatted_response = json.loads(response.text)#convert to json
+    #if status code is 200, than extract value of emotions
+    if response.status_code ==200:
 
-    anger_score = formatted_response["emotionPredictions"][0]["emotion"]["anger"] #get anger score
-    disgust_score = formatted_response["emotionPredictions"][0]["emotion"]["disgust"] #get disgust score
-    fear_score = formatted_response["emotionPredictions"][0]["emotion"]["fear"] #get fear score
-    joy_score = formatted_response["emotionPredictions"][0]["emotion"]["joy"] #get joy score
-    sadness_score = formatted_response["emotionPredictions"][0]["emotion"]["sadness"] #get sadness score
+        formatted_response = json.loads(response.text)#convert to json
 
-    dominant_emotion_score = max(anger_score,disgust_score,fear_score,joy_score,sadness_score) #get the maximum emotion score
-    mydict = {"anger": anger_score, "disgust": disgust_score, "fear": fear_score, "joy": joy_score, "sadness": sadness_score} # create dictionary
-    
-    #get the dominent emotion from dictionary having max score
-    for emotion,score in mydict.items():
-        global dominant_emotion
-        if score == dominant_emotion_score:
-            dominant_emotion = emotion
+        anger_score = formatted_response["emotionPredictions"][0]["emotion"]["anger"] #get anger score
+        disgust_score = formatted_response["emotionPredictions"][0]["emotion"]["disgust"] #get disgust score
+        fear_score = formatted_response["emotionPredictions"][0]["emotion"]["fear"] #get fear score
+        joy_score = formatted_response["emotionPredictions"][0]["emotion"]["joy"] #get joy score
+        sadness_score = formatted_response["emotionPredictions"][0]["emotion"]["sadness"] #get sadness score
 
-    mydict["dominant emotion"] = dominant_emotion #update doctionary with dominant emotion 
-
+        dominant_emotion_score = max(anger_score,disgust_score,fear_score,joy_score,sadness_score) #get the maximum emotion score
+        mydict = {"anger": anger_score, "disgust": disgust_score, "fear": fear_score, "joy": joy_score, "sadness": sadness_score} # create dictionary
+        #get the dominent emotion from dictionary having max score
+        for emotion,score in mydict.items():
+            global dominant_emotion
+            if score == dominant_emotion_score:
+                dominant_emotion = emotion
+        mydict["dominant emotion"] = dominant_emotion #update doctionary with dominant emotion 
+    elif response.status_code ==500:
+        anger_score = None #make anger score to None
+        disgust_score = None #make disgust score to None
+        fear_score = None #make fear score to None
+        joy_score = None #make joy score to None
+        sadness_score = None #make sadness score to None
+        dominant_emotion = None #make dominant emotion to None
+        mydict = {"anger": anger_score, "disgust": disgust_score, "fear": fear_score, "joy": joy_score, "sadness": sadness_score, "dominant emotion":dominant_emotion } # create dictionary
+    else:
+        anger_score = None #make anger score to None
+        disgust_score = None #make disgust score to None
+        fear_score = None #make fear score to None
+        joy_score = None #make joy score to None
+        sadness_score = None #make sadness score to None
+        dominant_emotion = None #make dominant emotion to None
+        mydict = {"anger": anger_score, "disgust": disgust_score, "fear": fear_score, "joy": joy_score, "sadness": sadness_score, "dominant emotion":dominant_emotion } # create dictionary
     return mydict
